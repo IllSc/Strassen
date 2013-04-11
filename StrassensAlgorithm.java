@@ -75,19 +75,54 @@ public class StrassensAlgorithm {
 
             double[][] P1 = strassen(sum(A11, A22), sum(B11, B22));
             double[][] P2 = strassen(sum(A21, A22), B11);
-            double[][] P3 = strassen(A11,minus(B12,B22));
-            double[][] P4 = strassen(A22,minus(B21,B11));
-            double[][] P5 = strassen(sum(A11,A12),B22);
-            double[][] P6 = strassen(minus(A21,A11),sum(B11,B12));
-            double[][] P7 = strassen(minus(A12,A22),sum(B21,B22));
-
-            //P1+P4-P5+P7
-            //P3+P5
-            //P2+P4
-            //P5+P1-P3-P7
+            double[][] P3 = strassen(A11, minus(B12, B22));
+            double[][] P4 = strassen(A22, minus(B21, B11));
+            double[][] P5 = strassen(sum(A11, A12), B22);
+            double[][] P6 = strassen(minus(A21, A11), sum(B11, B12));
+            double[][] P7 = strassen(minus(A12, A22), sum(B21, B22));
+            double[][] C11 = sum(minus(sum(P1, P4), P5), P7);
+            double[][] C12 = sum(P3, P5);
+            double[][] C21 = sum(P2, P4);
+            double[][] C22 = minus(minus(sum(P1, P5), P3), P7);
+            C = join(C11, C12, C21, C22);
         }
 
 
+        return C;
+    }
+
+    /**
+     * Method join untuk menggabungkan 4 sub-Matriks
+     *
+     * @param C11
+     * @param C12
+     * @param C21
+     * @param C22
+     * @return
+     */
+    public double[][] join(double[][] C11, double[][] C12, double[][] C21, double[][] C22) {
+        int size = C11.length;
+        double[][] C = new double[(size) * 2][(size) * 2];
+        for (int i = 0; i < C11.length; i++) {
+            for (int j = 0; j < C11.length; j++) {
+                C[i][j] = C11[i][j];
+            }
+        }
+        for (int i = 0; i < C11.length; i++) {
+            for (int j = 0; j < C11.length; j++) {
+                C[i][j] = C12[i][(size + j)];
+            }
+        }
+        for (int i = 0; i < C11.length; i++) {
+            for (int j = 0; j < C11.length; j++) {
+                C[i][j] = C21[size + i][j];
+            }
+        }
+        for (int i = 0; i < C11.length; i++) {
+            for (int j = 0; j < C11.length; j++) {
+                C[i][j] = C22[size + i][size + j];
+            }
+        }
         return C;
     }
 
@@ -104,7 +139,7 @@ public class StrassensAlgorithm {
         double[][] output = new double[size][size];
         for (int i = 0; i < output.length; i++) {
             for (int j = 0; j < output.length; j++) {
-                output[i][j] = input[((a - 1) * size + j)][((b - 1) * size + j)];
+                output[i][j] = input[((a - 1) * size + i)][((b - 1) * size + j)];
             }
         }
         return output;
