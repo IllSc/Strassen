@@ -4,11 +4,23 @@
  */
 package PR2;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Ivan
  */
 public class StrassensAlgorithm {
+
+    public static void main(String[] args) {
+        StrassensAlgorithm algo = new StrassensAlgorithm();
+        double[][] A = {{1, 0, 1}, {0, 1, 1}};
+        double[][] B = {{1, 0}, {1, 1}, {0, 1}};
+        double[][] C = algo.strassenMatrixMulti(A, B);
+        System.out.println(Arrays.deepToString(C));
+        System.out.println("Done");
+        System.out.println("Done");
+    }
 
     public double[][] strassenMatrixMulti(double[][] A, double[][] B) {
 
@@ -17,17 +29,36 @@ public class StrassensAlgorithm {
          * berukuran 2^n
          */
         int size;
-        size = (int) Math.pow(2, Math.ceil((Math.log(max(A.length, A[0].length))) / (Math.log(2))));
+        size = (int) Math.pow(2, Math.ceil((Math.log(max(max(A.length, A[0].length), max(B.length, B[0].length)))) / (Math.log(2))));
         double[][] C = mapping(A, size);
         double[][] D = mapping(B, size);
 
-        return null;
+        return revert(strassen(C, D), B[0].length, A.length);
+    }
+
+    /**
+     * Method revert untuk mengembalikan matriks dari bentuk yang dimensiny
+     * power of 2, menjadi sesuai input
+     *
+     * @param input
+     * @param column
+     * @param row
+     * @return
+     */
+    public double[][] revert(double[][] input, int column, int row) {
+        double[][] output = new double[column][row];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                output[i][j] = input[i][j];
+            }
+        }
+        return output;
     }
 
     /**
      * Method max mengembalikan bilangan yang paling besar dari dua buah input
-     *
-     * @param a
+     *     
+* @param a
      * @param b
      * @return
      */
@@ -41,8 +72,8 @@ public class StrassensAlgorithm {
 
     /**
      * Method mapping berfungsi untuk memetakan matriks ke matriks berukuran 2^n
-     *
-     * @param origin
+     *     
+* @param origin
      * @param size
      * @return
      */
@@ -83,7 +114,7 @@ public class StrassensAlgorithm {
             double[][] C11 = sum(minus(sum(P1, P4), P5), P7);
             double[][] C12 = sum(P3, P5);
             double[][] C21 = sum(P2, P4);
-            double[][] C22 = minus(minus(sum(P1, P5), P3), P7);
+            double[][] C22 = sum(minus(sum(P1, P3), P2), P6);
             C = join(C11, C12, C21, C22);
         }
 
@@ -93,8 +124,8 @@ public class StrassensAlgorithm {
 
     /**
      * Method join untuk menggabungkan 4 sub-Matriks
-     *
-     * @param C11
+     *     
+* @param C11
      * @param C12
      * @param C21
      * @param C22
@@ -110,17 +141,17 @@ public class StrassensAlgorithm {
         }
         for (int i = 0; i < C11.length; i++) {
             for (int j = 0; j < C11.length; j++) {
-                C[i][j] = C12[i][(size + j)];
+                C[i][(size + j)] = C12[i][j];
             }
         }
         for (int i = 0; i < C11.length; i++) {
             for (int j = 0; j < C11.length; j++) {
-                C[i][j] = C21[size + i][j];
+                C[size + i][j] = C21[i][j];
             }
         }
         for (int i = 0; i < C11.length; i++) {
             for (int j = 0; j < C11.length; j++) {
-                C[i][j] = C22[size + i][size + j];
+                C[size + i][size + j] = C22[i][j];
             }
         }
         return C;
@@ -128,8 +159,8 @@ public class StrassensAlgorithm {
 
     /**
      * Method partition untuk menghasilkan matriks hasil partisi
-     *
-     * @param input
+     *     
+* @param input
      * @param a
      * @param b
      * @return
@@ -147,8 +178,8 @@ public class StrassensAlgorithm {
 
     /**
      * Method ini berguna untuk menjumlahkan dua matriks
-     *
-     * @param A
+     *     
+* @param A
      * @param B
      * @return
      */
@@ -164,8 +195,8 @@ public class StrassensAlgorithm {
 
     /**
      * Method ini berguna untuk mengurangkan dua matriks
-     *
-     * @param A
+     *     
+* @param A
      * @param B
      * @return
      */
